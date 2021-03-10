@@ -2,9 +2,18 @@
 
 from smbus2 import SMBus
 import time
+import paho.mqtt.client as mqtt
+from datetime import datetime
 
 bus_number  = 1
 i2c_address = 0x76
+
+
+
+mqtt_client = mqtt.Client()
+mqtt_client.connect("fluent-bit",1883, 60)
+
+
 
 bus = SMBus(bus_number)
 
@@ -66,9 +75,19 @@ def readData():
 	temp_raw = (data[3] << 12) | (data[4] << 4) | (data[5] >> 4)
 	hum_raw  = (data[6] << 8)  |  data[7]
 	
-	compensate_T(temp_raw)
-	compensate_P(pres_raw)
-	compensate_H(hum_raw)
+	temp = compensate_T(temp_raw)
+	pre = compensate_P(pres_raw)
+	hum = compensate_H(hum_raw)
+	
+	tim = '"timestamp":"'+datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')+'"'
+	temp = '"' + "temp(degree)" + '"' + ":" + '"' + str(temp) + '"'
+	pre = '"' + "pressure(hPa)" + '"' + ":" + '"' + str(pre) + '"'
+	hum = '"' + "humid(%)" + '"' + ":" + '"' + str(hum) + '"'
+    
+	mylist = [tim,temp,pre,hum]
+	mystr = '{' + ','.join(map(str,mylist))+'}'
+	print(mystr)
+	mqtt_client.publish("{}/{}".format("/demo",'car_count'), mystr)
 
 def compensate_P(adc_P):
 	global  t_fine
@@ -140,8 +159,9 @@ get_calib_param()
 
 
 if __name__ == '__main__':
-	  while True:
-		  readData()
+	while True:
+		readData()
+	mqtt_client.disconnect()
 	except KeyboardInterrupt:
 		pass
   
