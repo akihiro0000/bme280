@@ -4,6 +4,7 @@ from smbus2 import SMBus
 import time
 import paho.mqtt.client as mqtt
 from datetime import datetime
+import pytz
 
 bus_number  = 1
 i2c_address = 0x76
@@ -79,7 +80,7 @@ def readData():
 	pre = compensate_P(pres_raw)
 	hum = compensate_H(hum_raw)
 	
-	tim = '"timestamp":"'+datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')+'"'
+	tim = '"timestamp":"'+datetime.now(pytz.timezone('Asia/Tokyo')).strftime('%Y-%m-%d %H:%M:%S.%f')+'"'
 	temp = '"' + "temp(degree)" + '"' + ":" + '"' + str(temp) + '"'
 	pre = '"' + "pressure(hPa)" + '"' + ":" + '"' + str(pre) + '"'
 	hum = '"' + "humid(%)" + '"' + ":" + '"' + str(hum) + '"'
