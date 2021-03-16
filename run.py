@@ -159,7 +159,6 @@ get_calib_param()
 
 
 if __name__ == '__main__':
-	while True:
-		readData()
+	readData()
 	mqtt_client.disconnect()
   
