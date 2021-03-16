@@ -1,0 +1,1 @@
+0 * * * * /usr/bin/python ./run.py >> /var/log/connection.log 2>&1
