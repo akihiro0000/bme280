@@ -1,1 +1,1 @@
-*/1 * * * * python /root/bme280/run.py >> /root/bme280/test.log 2>&1
+*/1 * * * * python /root/bme280/run.py
