@@ -160,6 +160,12 @@ get_calib_param()
 
 
 if __name__ == '__main__':
-	readData()
-	mqtt_client.disconnect()
+    	t0 = time.time()
+    	index = 0
+    	while True:
+		if (time.time() - t0)>60 :
+			readData()
+			t0 = time.time()
+    	mqtt_client.disconnect()
+	
   
