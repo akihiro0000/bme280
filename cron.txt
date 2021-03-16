@@ -1,1 +1,1 @@
-*/1 * * * * python /root/bme280/run.py
+*/60 * * * * python /root/bme280/run.py
